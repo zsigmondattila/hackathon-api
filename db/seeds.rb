@@ -26,5 +26,25 @@ CollectPoint.find_or_create_by(collection_type: "bottle", city_id: City.first.id
 CollectPoint.find_or_create_by(collection_type: "bottle", city_id: City.first.id, name:"Kaufland másik",address: "Strada Gheorghe Doja 66", longitude: 46.5311045068108, latitude: 24.546704379371487, contact_phone: "0773653211", partner_id: 2)
 CollectPoint.find_or_create_by(collection_type: "bottle", city_id: City.first.id, name:"Carrefour Shopping",address: "Strada Libertăţii 2", longitude: 46.52888531195909, latitude: 24.596180370433522, contact_phone: "0733989921", partner_id: 2)
 
+Achievement.find_or_create_by(name: "Eco Newbie", description: "Congratulations! You've started your eco-journey by recycling once.", points: 10)
+Achievement.find_or_create_by(name: "Eco Warrior", description: "You're making a difference! Keep up the good work and recycle 5 times to earn this achievement.", points: 50)
+Achievement.find_or_create_by(name: "Coupon Collector", description: "Congratulations! You've earned your first coupon.", points: 10)
+Achievement.find_or_create_by(name: "Coupon King/Queen", description: "You reign supreme in the world of coupons! Earn 50 coupons to achieve this noble title.", points: 500)
+Achievement.find_or_create_by(name: "Coupon Legend", description: "You're a legend among coupon collectors! Earn 100 coupons to achieve this legendary status.", points: 1000)
+Achievement.find_or_create_by(name: "Eco Champion", description: "You're a true champion for the planet! Recycle 10 times to earn this prestigious title.", points: 100)
+Achievement.find_or_create_by(name: "Coupon Enthusiast", description: "You're getting the hang of this! Earn 5 coupons to achieve this milestone.", points: 50)
+Achievement.find_or_create_by(name: "Eco Master", description: "You're a master of recycling! Recycle 20 times to earn this ultimate achievement.", points: 200)
+Achievement.find_or_create_by(name: "Eco Guardian", description: "You're a guardian of the environment! Recycle 50 times to earn this noble achievement.", points: 500)
+Achievement.find_or_create_by(name: "Coupon Connoisseur", description: "You're a true expert at collecting coupons! Earn 10 coupons to achieve this prestigious title.", points: 100)
+Achievement.find_or_create_by(name: "Planet Saver", description: "You're a legend in the recycling world! Recycle 100 times to earn this legendary achievement.", points: 1000)
+Achievement.find_or_create_by(name: "Coupon Master", description: "You're the ultimate coupon collector! Earn 20 coupons to achieve this legendary status.", points: 200)
+Achievement.find_or_create_by(name: "Master Recycler", description: "You're the master of recycling! Recycle 200 times to earn this legendary achievement.", points: 2000)
+Achievement.find_or_create_by(name: "Coupon Tycoon", description: "You're the tycoon of coupons! Earn 200 coupons to achieve this unparalleled status.", points: 2000)
+Achievement.find_or_create_by(name: "Weekly Point Champion", description: "Congratulations! You've earned the most points in a single week.", points: 100)
+Achievement.find_or_create_by(name: "Weekly Point Leader", description: "You're consistently at the top! Earn the most points in a week for 3 consecutive weeks to achieve this title.", points: 200)
+Achievement.find_or_create_by(name: "Weekly Point Master", description: "You're a master of weekly point accumulation! Earn the most points in a week for 5 consecutive weeks to achieve this prestigious status.", points: 500)
+Achievement.find_or_create_by(name: "Weekly Point Legend", description: "You're a legend in weekly point earning! Earn the most points in a week for 10 consecutive weeks to achieve this legendary status.", points: 1000)
+
+
 
 

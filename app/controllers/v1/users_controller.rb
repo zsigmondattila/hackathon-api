@@ -27,7 +27,7 @@ class V1::UsersController < V1::ApplicationController
               city: City.find_by(id: user.city_id),
               access_token: access_token.token,
               token_type: 'bearer',
-              expires_in: access_token.expires_in,
+              expires_in: 2.days.to_i,
               refresh_token: access_token.refresh_token,
               created_at: access_token.created_at.to_time.to_i
             }

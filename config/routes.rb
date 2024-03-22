@@ -17,5 +17,6 @@ Rails.application.routes.draw do
     get '/get_counties', to: 'application#get_counties'
     get '/get_cities_in_county', to: 'application#get_cities_in_county'
     get '/get_collect_points', to: 'application#get_collect_points'
+    post '/scan_voucher', to: 'application#scan_voucher'
   end
 end
