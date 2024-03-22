@@ -14,6 +14,7 @@ gem "puma", ">= 5.0"
 gem "doorkeeper"
 gem "doorkeeper-jwt"
 gem "devise"
+gem "rack-cors"
 
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 # gem "jbuilder"

@@ -10,7 +10,8 @@ Rails.application.routes.draw do
   get "up" => "rails/health#show", as: :rails_health_check
 
   namespace :v1 do
-    resources :users, only: %i[create]
+    post '/registration', to: 'users#create'
+    get '/user_data', to: 'users#show'
 
     get '/test', to: 'application#test'
     get '/get_collect_points', to: 'application#get_collect_points'

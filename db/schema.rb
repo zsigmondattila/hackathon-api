@@ -22,8 +22,16 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_22_141413) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "cities", force: :cascade do |t|
+    t.string "name"
+    t.string "county"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "collect_points", force: :cascade do |t|
     t.string "type"
+    t.bigint "city_id", null: false
     t.string "address"
     t.decimal "latitude"
     t.decimal "longitude"
@@ -31,6 +39,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_22_141413) do
     t.bigint "partner_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["city_id"], name: "index_collect_points_on_city_id"
     t.index ["partner_id"], name: "index_collect_points_on_partner_id"
   end
 
@@ -121,12 +130,14 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_22_141413) do
     t.datetime "remember_created_at"
     t.string "firstname"
     t.string "lastname"
+    t.bigint "city_id", null: false
     t.string "provider"
     t.string "phone_number"
     t.decimal "balance"
     t.integer "leaderboard_position"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["city_id"], name: "index_users_on_city_id"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
@@ -144,6 +155,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_22_141413) do
     t.index ["user_id"], name: "index_vouchers_on_user_id"
   end
 
+  add_foreign_key "collect_points", "cities"
   add_foreign_key "collect_points", "partners"
   add_foreign_key "earned_achievements", "achievements"
   add_foreign_key "earned_achievements", "users"
@@ -152,6 +164,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_22_141413) do
   add_foreign_key "scoreboards", "users"
   add_foreign_key "transactions", "users"
   add_foreign_key "transactions", "vouchers"
+  add_foreign_key "users", "cities"
   add_foreign_key "vouchers", "partners"
   add_foreign_key "vouchers", "users"
 end
