@@ -7,3 +7,8 @@
 #   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
+
+# if there is no OAuth application created, create them
+if Doorkeeper::Application.count.zero?
+    Doorkeeper::Application.create(name: "client", redirect_uri: "", scopes: "")
+  end
