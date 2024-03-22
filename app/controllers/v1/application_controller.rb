@@ -1,5 +1,5 @@
 class V1::ApplicationController < ApplicationController
-    #before_action :doorkeeper_authorize!, except: [:test]
+    before_action :doorkeeper_authorize!, except: [:test, :get_counties, :get_cities_in_county, :get_collect_points, :create_achievement, :list_of_achievements, :add_points_to_user, :get_user_points, :scan_voucher, :use_voucher]
 
     def test
         render json: { message: 'Hello World' }
@@ -92,12 +92,12 @@ class V1::ApplicationController < ApplicationController
       end
       
     def get_user_points
-    user = current_user
-    weekly_points = user.scoreboard.where("date >= ?", 1.week.ago).sum(:points)
-    monthly_points = user.scoreboard.where("date >= ?", 1.month.ago).sum(:points)
-    total_points = user.scoreboard.sum(:points)
-    
-    render json: { Weekly_Points: weekly_points, Monthly_Points: monthly_points, Total_Points: total_points }
+        user = current_user
+        weekly_points = user.scoreboard.where("date >= ?", 1.week.ago).sum(:points)
+        monthly_points = user.scoreboard.where("date >= ?", 1.month.ago).sum(:points)
+        total_points = user.scoreboard.sum(:points)
+        
+        render json: { Weekly_Points: weekly_points, Monthly_Points: monthly_points, Total_Points: total_points }
     end
 
     private
