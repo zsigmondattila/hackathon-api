@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  type: 
+  address: MyString
+  latitude: 9.99
+  longitude: 9.99
+  contact_phone: MyString
+  partner: one
+
+two:
+  type: 
+  address: MyString
+  latitude: 9.99
+  longitude: 9.99
+  contact_phone: MyString
+  partner: two
