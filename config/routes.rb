@@ -14,6 +14,8 @@ Rails.application.routes.draw do
     get '/user_data', to: 'users#show'
 
     get '/test', to: 'application#test'
+    get '/get_counties', to: 'application#get_counties'
+    get '/get_cities_in_county', to: 'application#get_cities_in_county'
     get '/get_collect_points', to: 'application#get_collect_points'
   end
 end

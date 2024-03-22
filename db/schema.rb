@@ -17,6 +17,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_22_141413) do
   create_table "achievements", force: :cascade do |t|
     t.string "name"
     t.string "description"
+    t.string "icon"
     t.integer "point_value"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -30,8 +31,9 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_22_141413) do
   end
 
   create_table "collect_points", force: :cascade do |t|
-    t.string "type"
+    t.string "collection_type"
     t.bigint "city_id", null: false
+    t.string "name"
     t.string "address"
     t.decimal "latitude"
     t.decimal "longitude"
