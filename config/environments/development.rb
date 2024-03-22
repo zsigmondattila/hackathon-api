@@ -12,6 +12,7 @@ Rails.application.configure do
   config.eager_load = false
 
   config.hosts << "h4ckathon.go.ro:3000"
+  config.hosts << "bus4u.fast-table.com"
 
   # Show full error reports.
   config.consider_all_requests_local = true

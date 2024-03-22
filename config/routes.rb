@@ -18,5 +18,12 @@ Rails.application.routes.draw do
     get '/get_cities_in_county', to: 'application#get_cities_in_county'
     get '/get_collect_points', to: 'application#get_collect_points'
     post '/scan_voucher', to: 'application#scan_voucher'
+    post '/use_voucher', to: 'application#use_voucher'
+    post '/create_achievement', to: 'application#create_achievement'
+    get '/list_of_achievements', to: 'application#list_of_achievements'
+    post '/add_points_to_user', to: 'application#add_points_to_user'
+    get '/get_user_points', to: 'application#get_user_points'
+    post '/generate_coupon', to: 'application#generate_coupon'
+
   end
 end

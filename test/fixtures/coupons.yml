@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  value: 9.99
+  valid_until: 2024-03-22
+  user: one
+  partner: one
+
+two:
+  value: 9.99
+  valid_until: 2024-03-22
+  user: two
+  partner: two

@@ -100,6 +100,12 @@ class V1::ApplicationController < ApplicationController
         render json: { Weekly_Points: weekly_points, Monthly_Points: monthly_points, Total_Points: total_points }
     end
 
+    def generate_coupon
+        user = current_user
+        user.coupons.create(value: params[:value], valid_until: Time.now + 1.month, partner_id: params[:partner_id])
+        render json: { message: 'Coupon generated' }
+    end
+
     private
 
     # helper method to access the current user from the token
