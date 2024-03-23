@@ -49,6 +49,7 @@ class V1::UsersController < V1::ApplicationController
                 lastname: user.lastname,
                 phone_number: user.phone_number,
                 balance: user.balance,
+                total_points: user.scoreboard.sum(:points),
                 leaderboard_position: user.leaderboard_position,
                 city: City.find_by(id: user.city_id)
               }
