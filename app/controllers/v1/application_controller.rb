@@ -73,9 +73,17 @@ class V1::ApplicationController < ApplicationController
           
           if user_voucher.save
             user.balance += voucher.value
-            
-            if user.save
-              render json: { message: 'Voucher scanned', new_balance: user.balance }
+
+            coupons_earned = UserVoucher.where(user_id: user.id).count
+            new_achievements = check_achievements(user, coupons_earned)
+            puts "coupons_earned #{coupons_earned}"
+
+            score = user.balance * 10
+            scoreboard = Scoreboard.create(user_id: user.id, points: score)
+            scoreboard = Scoreboard.create(user_id: user.id, available_points: score)
+            if user.save && scoreboard.persisted?
+              available_points = Scoreboard.where(user_id: user.id).sum(:available_points)
+              render json: { message: 'Voucher scanned', new_balance: user.balance,  available_points: available_points, new_achievements: new_achievements}
             else
               render json: { error: user.errors.full_messages, message: 'User balance update failed' }, status: :unprocessable_entity
             end
@@ -148,7 +156,7 @@ class V1::ApplicationController < ApplicationController
               id: achievement.id,
               name: achievement.name,
               description: achievement.description,
-              points: achievement.point_value 
+              reward_points: achievement.point_value 
             }
           end
           render json: { earned_achievements: achievements }
@@ -261,13 +269,13 @@ class V1::ApplicationController < ApplicationController
         puts "Total available points: #{total_available_points} Reward points: #{reward.point_value}"
 
         if total_available_points < reward.point_value
-            render json: { message: 'Insufficient points' }
+            render json: { message: 'Insufficient points' }, status: :forbidden
         else
             user.scoreboard.create(available_points: -reward.point_value, points_date: Time.now)
 
             code = SecureRandom.alphanumeric(6).upcase
             user_reward = UserReward.create(user_id: user.id, reward_id: reward.id, is_used: false, code: code)
-            render json: { message: 'Reward redeemed' , user_reward: user_reward}
+            render json: { message: 'Reward redeemed' , user_reward: user_reward}, status: :accepted
         end
     end
       
@@ -320,5 +328,25 @@ class V1::ApplicationController < ApplicationController
         county_leaderboard
       end
       
-
+      def check_achievements(user, coupons_earned)
+        new_achievements = []
+      
+        achievement_thresholds = {
+          "Coupon Collector" => 1,
+          "Coupon Enthusiast" => 5,
+          "Coupon Connoisseur" => 10,
+          "Coupon King/Queen" => 50,
+          "Coupon Legend" => 100
+        }
+      
+        achievement_thresholds.each do |achievement_name, threshold|
+          if coupons_earned >= threshold && !user.earned_achievements.exists?(achievement_id: Achievement.find_by(name: achievement_name).id)
+            user.earned_achievements.create(achievement_id: Achievement.find_by(name: achievement_name).id, earn_date: Date.today)
+            ach = Achievement.find_by(name: achievement_name)
+            new_achievements << ach
+          end
+        end
+      
+        new_achievements
+      end
 end
