@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_03_22_211216) do
+ActiveRecord::Schema[7.1].define(version: 2024_03_23_123522) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -118,6 +118,17 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_22_211216) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "rewards", force: :cascade do |t|
+    t.string "name"
+    t.string "description"
+    t.boolean "is_active"
+    t.integer "point_value"
+    t.bigint "partner_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["partner_id"], name: "index_rewards_on_partner_id"
+  end
+
   create_table "scoreboards", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.integer "points"
@@ -134,6 +145,16 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_22_211216) do
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_transactions_on_user_id"
     t.index ["voucher_id"], name: "index_transactions_on_voucher_id"
+  end
+
+  create_table "user_rewards", force: :cascade do |t|
+    t.boolean "is_used"
+    t.bigint "user_id", null: false
+    t.bigint "reward_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["reward_id"], name: "index_user_rewards_on_reward_id"
+    t.index ["user_id"], name: "index_user_rewards_on_user_id"
   end
 
   create_table "user_vouchers", force: :cascade do |t|
@@ -184,9 +205,12 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_22_211216) do
   add_foreign_key "earned_achievements", "users"
   add_foreign_key "oauth_access_grants", "oauth_applications", column: "application_id"
   add_foreign_key "oauth_access_tokens", "oauth_applications", column: "application_id"
+  add_foreign_key "rewards", "partners"
   add_foreign_key "scoreboards", "users"
   add_foreign_key "transactions", "users"
   add_foreign_key "transactions", "vouchers"
+  add_foreign_key "user_rewards", "rewards"
+  add_foreign_key "user_rewards", "users"
   add_foreign_key "user_vouchers", "users"
   add_foreign_key "user_vouchers", "vouchers"
   add_foreign_key "users", "cities"

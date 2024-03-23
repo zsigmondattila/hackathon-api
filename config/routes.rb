@@ -27,6 +27,7 @@ Rails.application.routes.draw do
     get '/get_user_points', to: 'application#get_user_points'
     post '/generate_coupon', to: 'application#generate_coupon'
     get '/leaderboard', to: 'application#leaderboard'
+    get '/get_rewards', to: 'application#get_rewards'
 
   end
 end

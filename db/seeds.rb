@@ -25,6 +25,8 @@ User.find_or_create_by(email: "attila.zsigmond2002@gmail.com", encrypted_passwor
 Partner.find_or_create_by(name: "Lidl Romania", contact_name: "Elekes István", contact_phone: "0740123456", contact_email: "elekes.istvan@gmail.com")
 Partner.find_or_create_by(name: "Kaufland Romania", contact_name: "Kovács Lehel", contact_phone: "0746183116", contact_email: "kovacs.lehel@gmail.com")
 Partner.find_or_create_by(name: "Carrefour Romania", contact_name: "Csata Béla", contact_phone: "0752133992", contact_email: "csata.bela@yahoo.com")
+Partner.find_or_create_by(name: "Cinema City", contact_name: "Árvai Éva", contact_phone: "0746183116", contact_email: "eva@citromail.hu")
+Partner.find_or_create_by(name: "Maza Food", contact_name: "Kovács Lehel", contact_phone: "0723563564", contact_email: "lehi@maza.ro")
 
 CollectPoint.find_or_create_by(collection_type: "bottle", city_id: City.first.id, name:"Lidl Tudor", address: "Strada Livezeni 6", longitude: 46.53503351439234, latitude: 24.59387421675232, contact_phone: "0751946282", partner_id: 1)
 CollectPoint.find_or_create_by(collection_type: "bottle", city_id: City.first.id, name:"Lidl Doja",address: "Strada Gheorghe Doja 62A", longitude: 46.53272710183293, latitude: 24.549589532236077, contact_phone: "0773857211", partner_id: 1)
@@ -52,6 +54,22 @@ Achievement.find_or_create_by(name: "Weekly Point Leader", description: "You're 
 Achievement.find_or_create_by(name: "Weekly Point Master", description: "You're a master of weekly point accumulation! Earn the most points in a week for 5 consecutive weeks to achieve this prestigious status.", point_value: 500)
 Achievement.find_or_create_by(name: "Weekly Point Legend", description: "You're a legend in weekly point earning! Earn the most points in a week for 10 consecutive weeks to achieve this legendary status.", point_value: 1000)
 
+Reward.find_or_create_by(name: "5% off at Lidl", description: "Get 5% off your next purchase at Lidl!", point_value: 100, partner_id: 1, is_active: true)
+Reward.find_or_create_by(name: "10% off at Kaufland", description: "Enjoy 10% off your next purchase at Kaufland!", point_value: 210, partner_id: 2, is_active: true)
+Reward.find_or_create_by(name: "Free coffee at Carrefour", description: "Savor a complimentary cup of coffee at Carrefour!", point_value: 75, partner_id: 3, is_active: true)
+Reward.find_or_create_by(name: "20% off at Lidl", description: "Get a generous 20% discount on your next purchase at Lidl!", point_value: 350, partner_id: 1, is_active: true)
+Reward.find_or_create_by(name: "Buy one, get one free at Kaufland", description: "Take advantage of a buy one, get one free offer at Kaufland!", point_value: 120, partner_id: 2, is_active: true)
+Reward.find_or_create_by(name: "50% off at Carrefour", description: "Enjoy a whopping 50% discount on your next purchase at Carrefour!", point_value: 2000, partner_id: 3, is_active: true)
+Reward.find_or_create_by(name: "Free movie ticket", description: "Enjoy a free movie ticket at Cinema city!", point_value: 200, partner_id: 4, is_active: true)
+Reward.find_or_create_by(name: "Dinner for two", description: "Indulge in a delicious dinner for two at Maza Food!", point_value: 800, partner_id: 5, is_active: true)
+Reward.find_or_create_by(name: "Free popcorn at Cinema City", description: "Enjoy a complimentary bag of popcorn at Cinema City!", point_value: 50, partner_id: 4, is_active: true)
+Reward.find_or_create_by(name: "Free drink at Maza Food", description: "Sip on a free drink of your choice at Maza Food!", point_value: 30, partner_id: 5, is_active: true)
+Reward.find_or_create_by(name: "Free bread at Lidl", description: "Enjoy a complimentary loaf of bread at Lidl!", point_value: 30, partner_id: 1, is_active: true)
+Reward.find_or_create_by(name: "15% off at Kaufland", description: "Get 15% off your next purchase at Kaufland!", point_value: 80, partner_id: 2, is_active: true)
+Reward.find_or_create_by(name: "Free dessert at Carrefour", description: "Indulge in a delicious dessert for free at Carrefour!", point_value: 60, partner_id: 3, is_active: true)
+Reward.find_or_create_by(name: "Discounted groceries at Lidl", description: "Get discounted prices on groceries at Lidl!", point_value: 100, partner_id: 1, is_active: true)
+Reward.find_or_create_by(name: "Buy one, get one half off at Kaufland", description: "Take advantage of a buy one, get one half off offer at Kaufland!", point_value: 150, partner_id: 2, is_active: true)
+Reward.find_or_create_by(name: "Free household item at Carrefour", description: "Receive a free household item of your choice at Carrefour!", point_value: 90, partner_id: 3, is_active: true)
 
 
 

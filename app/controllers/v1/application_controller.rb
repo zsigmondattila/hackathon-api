@@ -210,6 +210,11 @@ class V1::ApplicationController < ApplicationController
         }
     end
 
+    def get_rewards
+        rewards = Reward.all
+        render json: { rewards: rewards }
+    end
+
     private
 
     # helper method to access the current user from the token
