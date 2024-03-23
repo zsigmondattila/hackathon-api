@@ -158,7 +158,7 @@ class V1::ApplicationController < ApplicationController
           monthly_leaderboard: monthly_leaderboard,
           total_leaderboard: total_leaderboard
         }
-      end
+    end
 
     private
 
@@ -176,6 +176,10 @@ class V1::ApplicationController < ApplicationController
         leaderboard = []
         scoreboard_data.each_with_index do |(user_id, points), index|
           user = User.find(user_id)
+          if start_date.nil? && end_date.nil?
+            user.leaderboard_position = index + 1
+            user.save
+          end
           leaderboard << { rank: index + 1, user_id: user_id, firstname: user.firstname, lastname: user.lastname, points: points }
         end
         leaderboard
