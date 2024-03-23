@@ -34,9 +34,13 @@ class V1::ApplicationController < ApplicationController
 
     def get_vouchers_for_user
         user = current_user
-        vouchers = Voucher.where(user_id: user.id)
+        user_vouchers = UserVoucher.where(user_id: user.id).includes(:voucher)
+        
+        vouchers = user_vouchers.map(&:voucher)
+        
         render json: { vouchers: vouchers }
-    end
+      end
+      
 
     def print_voucher
         partner_id_formatted = sprintf('%03d', params[:partner_id])
