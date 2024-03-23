@@ -1,5 +1,5 @@
 class V1::ApplicationController < ApplicationController
-    before_action :doorkeeper_authorize!, except: [:test, :get_counties, :get_cities_in_county, :get_collect_points, :create_achievement, :list_of_achievements, :add_points_to_user, :get_user_points, :scan_voucher, :use_voucher]
+    before_action :doorkeeper_authorize!, except: [:test, :print_voucher, :get_counties, :get_cities_in_county, :get_collect_points, :create_achievement, :list_of_achievements, :add_points_to_user, :get_user_points]
 
     def test
         render json: { message: 'Hello World' }
@@ -38,37 +38,83 @@ class V1::ApplicationController < ApplicationController
         render json: { vouchers: vouchers }
     end
 
-    def scan_voucher
-        user = current_user
-        v = Voucher.create(user_id: user.id, value: params[:value], valability: Time.now + 1.month, barcode: params[:barcode], is_valid: true, partner_id: params[:partner_id])
-        user.balance += params[:value].to_d
-        if v.save && user.save
-            render json: { message: 'Voucher scanned', new_balance: user.balance}
-        else
-            render json: { error: user.errors.full_messages, voucher_error: v.errors.full_messages}
-        end
-    end
-
-    def use_voucher
-        user = current_user
-        voucher = Voucher.find_by(user_id: user.id, barcode: params[:barcode])
+    def print_voucher
+        partner_id_formatted = sprintf('%03d', params[:partner_id])
+        value_formatted = sprintf('%.2f', params[:value]).delete('.').rjust(5, '0')
+        random_numbers = SecureRandom.random_number(100_000).to_s.rjust(5, '0')
+        barcode = "#{partner_id_formatted} #{random_numbers} #{value_formatted} #{SecureRandom.random_number(100).to_s.rjust(2, '0')}"
+        puts barcode
+        
+        v = Voucher.create(
+          value: params[:value],
+          valability: Time.now + 1.month,
+          barcode: barcode,
+          is_valid: true,
+          partner_id: params[:partner_id]
+        )
       
+        if v.save
+          render json: { message: 'Voucher printed' , barcode: barcode}
+        else
+          render json: { error: v.errors.full_messages }
+        end
+      end    
+
+      def add_user_voucher
+        user = current_user
+        voucher = Voucher.find_by(barcode: params[:barcode])
+      
+        if voucher
+          user_voucher = UserVoucher.new(user_id: user.id, voucher_id: voucher.id)
+          
+          if user_voucher.save
+            user.balance += voucher.value
+            
+            if user.save
+              render json: { message: 'Voucher scanned', new_balance: user.balance }
+            else
+              render json: { error: user.errors.full_messages, message: 'User balance update failed' }, status: :unprocessable_entity
+            end
+          else
+            render json: { error: user_voucher.errors.full_messages, message: 'UserVoucher creation failed' }, status: :unprocessable_entity
+          end
+        else
+          render json: { message: 'Voucher not found' }, status: :not_found
+        end
+      end
+      
+
+    def use_user_voucher
+        user = current_user
+        barcode = params[:barcode]
+        
+        voucher = Voucher.find_by(barcode: barcode)
+        puts "Voucher found: #{voucher} for barcode: #{barcode} last voucher: #{Voucher.last.barcode}"
+        
         if voucher && voucher.is_valid
-          if user.balance >= voucher.value
+          user_voucher = UserVoucher.find_by(user_id: user.id, voucher_id: voucher.id)
+      
+          if user_voucher
+            if user.balance >= voucher.value
               voucher.is_valid = false
               voucher.save!
-      
+        
               user.balance -= voucher.value
               user.save!
-      
+        
               render json: { message: 'Voucher used' }, status: :accepted
+            else
+              render json: { message: 'Insufficient balance' }, status: :forbidden
+            end
           else
-            render json: { message: 'Insufficient balance' }, status: :forbidden
+            render json: { message: 'Voucher not found for the current user' }, status: :not_found
           end
         else
           render json: { message: 'Voucher not found or already used' }, status: :not_found
         end
       end
+      
+      
 
     def create_achievement
         user = current_user

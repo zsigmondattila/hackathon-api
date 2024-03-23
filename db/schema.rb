@@ -47,6 +47,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_22_211216) do
 
   create_table "coupons", force: :cascade do |t|
     t.decimal "value"
+    t.string "code"
     t.date "valid_until"
     t.bigint "user_id", null: false
     t.bigint "partner_id"
@@ -135,6 +136,15 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_22_211216) do
     t.index ["voucher_id"], name: "index_transactions_on_voucher_id"
   end
 
+  create_table "user_vouchers", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "voucher_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_user_vouchers_on_user_id"
+    t.index ["voucher_id"], name: "index_user_vouchers_on_voucher_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -156,7 +166,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_22_211216) do
   end
 
   create_table "vouchers", force: :cascade do |t|
-    t.bigint "user_id", null: false
     t.decimal "value"
     t.date "valability"
     t.string "barcode"
@@ -165,7 +174,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_22_211216) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["partner_id"], name: "index_vouchers_on_partner_id"
-    t.index ["user_id"], name: "index_vouchers_on_user_id"
   end
 
   add_foreign_key "collect_points", "cities"
@@ -179,7 +187,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_22_211216) do
   add_foreign_key "scoreboards", "users"
   add_foreign_key "transactions", "users"
   add_foreign_key "transactions", "vouchers"
+  add_foreign_key "user_vouchers", "users"
+  add_foreign_key "user_vouchers", "vouchers"
   add_foreign_key "users", "cities"
   add_foreign_key "vouchers", "partners"
-  add_foreign_key "vouchers", "users"
 end
