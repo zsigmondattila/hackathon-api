@@ -21,6 +21,7 @@ Rails.application.routes.draw do
     post '/print_voucher', to: 'application#print_voucher'
     post '/add_user_voucher', to: 'application#add_user_voucher'
     post '/use_user_voucher', to: 'application#use_user_voucher'
+    get '/get_voucher_by_barcode', to: 'application#get_voucher_by_barcode'
     post '/create_achievement', to: 'application#create_achievement'
     get '/list_of_achievements', to: 'application#list_of_achievements'
     post '/add_points_to_user', to: 'application#add_points_to_user'

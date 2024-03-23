@@ -118,6 +118,15 @@ class V1::ApplicationController < ApplicationController
         end
       end
 
+      def get_voucher_by_barcode
+        voucher = Voucher.find_by(barcode: params[:barcode])
+        if voucher
+            render json: { voucher: voucher }
+        else
+            render json: { message: 'Voucher not found' }
+        end
+      end
+
     def create_achievement
         user = current_user
         achievement = Achievement.find(params[:achievement_id])
