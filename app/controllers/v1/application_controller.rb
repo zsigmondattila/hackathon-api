@@ -11,7 +11,7 @@ class V1::ApplicationController < ApplicationController
     end
 
     def get_cities_in_county
-        cities = City.find_by(county: params[:county])
+        cities = City.where(county: params[:county])
         render json: {cities: cities}
     end
 
