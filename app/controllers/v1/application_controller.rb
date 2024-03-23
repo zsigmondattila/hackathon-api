@@ -1,5 +1,5 @@
 class V1::ApplicationController < ApplicationController
-    before_action :doorkeeper_authorize!, except: [:test, :print_voucher, :get_counties, :get_cities_in_county, :get_collect_points, :create_achievement, :list_of_achievements, :add_points_to_user, :get_user_points]
+    before_action :doorkeeper_authorize!, except: [:test, :get_voucher_by_barcode, :print_voucher, :get_counties, :get_cities_in_county, :get_collect_points, :create_achievement, :list_of_achievements, :add_points_to_user, :get_user_points]
 
     def test
         render json: { message: 'Hello World' }
