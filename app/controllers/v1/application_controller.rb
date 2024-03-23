@@ -118,7 +118,10 @@ class V1::ApplicationController < ApplicationController
     end
       
     def get_user_points
-        user = current_user
+        user = User.find_by(email: params[:email])
+        if !user
+            user = current_user
+        end
         weekly_points = user.scoreboard.where("points_date >= ?", 1.week.ago).sum(:points)
         monthly_points = user.scoreboard.where("points_date >= ?", 1.month.ago).sum(:points)
         total_points = user.scoreboard.sum(:points)
