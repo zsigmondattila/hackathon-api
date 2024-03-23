@@ -205,17 +205,26 @@ class V1::ApplicationController < ApplicationController
     end
 
     def leaderboard
-        weekly_leaderboard = generate_leaderboard(7.days.ago, Time.now)
-      
-        monthly_leaderboard = generate_leaderboard(1.month.ago, Time.now)
-      
-        total_leaderboard = generate_leaderboard(nil, nil)
-      
-        render json: {
-          weekly_leaderboard: weekly_leaderboard,
-          monthly_leaderboard: monthly_leaderboard,
-          total_leaderboard: total_leaderboard
-        }
+        county = params[:county]
+        if county == 'true'
+            weekly_leaderboard = generate_county_leaderboard(7.days.ago, Time.now)
+            monthly_leaderboard = generate_county_leaderboard(1.month.ago, Time.now)
+            total_leaderboard = generate_county_leaderboard(nil, nil)
+            render json: {
+                weekly_leaderboard: weekly_leaderboard,
+                monthly_leaderboard: monthly_leaderboard,
+                total_leaderboard: total_leaderboard
+            }
+        else
+            weekly_leaderboard = generate_leaderboard(7.days.ago, Time.now)
+            monthly_leaderboard = generate_leaderboard(1.month.ago, Time.now)
+            total_leaderboard = generate_leaderboard(nil, nil)
+            render json: {
+                weekly_leaderboard: weekly_leaderboard,
+                monthly_leaderboard: monthly_leaderboard,
+                total_leaderboard: total_leaderboard
+            }
+        end
     end
 
     def get_rewards
@@ -295,6 +304,21 @@ class V1::ApplicationController < ApplicationController
     end
 
     def generate_county_leaderboard(start_date, end_date)
-    end
+        county_leaderboard = []
+        
+        county_points_data = Scoreboard.joins(user: :city)
+                                        .where(points_date: start_date..end_date)
+                                        .group('cities.county')
+                                        .sum(:points)
+        
+        sorted_counties = county_points_data.sort_by { |_county, points| -points }
+        
+        sorted_counties.each_with_index do |(county, points), index|
+          county_leaderboard << { rank: index + 1, county: county, points: points }
+        end
+        
+        county_leaderboard
+      end
+      
 
 end

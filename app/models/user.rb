@@ -5,6 +5,7 @@ class User < ApplicationRecord
   has_many :scoreboard, class_name: 'Scoreboard'
   has_many :user_vouchers, class_name: 'UserVoucher'
   has_many :coupons, class_name: 'Coupon'
+  belongs_to :city, class_name: 'City'
 
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
