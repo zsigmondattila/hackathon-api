@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_03_23_133335) do
+ActiveRecord::Schema[7.1].define(version: 2024_03_23_123522) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -43,18 +43,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_23_133335) do
     t.datetime "updated_at", null: false
     t.index ["city_id"], name: "index_collect_points_on_city_id"
     t.index ["partner_id"], name: "index_collect_points_on_partner_id"
-  end
-
-  create_table "coupons", force: :cascade do |t|
-    t.decimal "value"
-    t.string "code"
-    t.date "valid_until"
-    t.bigint "user_id", null: false
-    t.bigint "partner_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["partner_id"], name: "index_coupons_on_partner_id"
-    t.index ["user_id"], name: "index_coupons_on_user_id"
   end
 
   create_table "earned_achievements", force: :cascade do |t|
@@ -132,10 +120,10 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_23_133335) do
   create_table "scoreboards", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.integer "points"
+    t.integer "available_points"
     t.date "points_date"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "available_points"
     t.index ["user_id"], name: "index_scoreboards_on_user_id"
   end
 
@@ -183,7 +171,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_23_133335) do
     t.integer "leaderboard_position", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "available_score"
     t.index ["city_id"], name: "index_users_on_city_id"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
@@ -202,8 +189,6 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_23_133335) do
 
   add_foreign_key "collect_points", "cities"
   add_foreign_key "collect_points", "partners"
-  add_foreign_key "coupons", "partners"
-  add_foreign_key "coupons", "users"
   add_foreign_key "earned_achievements", "achievements"
   add_foreign_key "earned_achievements", "users"
   add_foreign_key "oauth_access_grants", "oauth_applications", column: "application_id"

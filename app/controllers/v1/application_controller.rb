@@ -78,7 +78,7 @@ class V1::ApplicationController < ApplicationController
             new_achievements = check_achievements(user, coupons_earned)
             puts "coupons_earned #{coupons_earned}"
 
-            score = user.balance * 10
+            score = voucher.value * 10
             scoreboard = Scoreboard.create(user_id: user.id, points: score)
             scoreboard = Scoreboard.create(user_id: user.id, available_points: score)
             if user.save && scoreboard.persisted?
