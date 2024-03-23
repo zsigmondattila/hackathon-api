@@ -117,8 +117,6 @@ class V1::ApplicationController < ApplicationController
           render json: { message: 'Voucher not found or already used' }, status: :not_found
         end
       end
-      
-      
 
     def create_achievement
         user = current_user
@@ -219,11 +217,23 @@ class V1::ApplicationController < ApplicationController
     def get_user_rewards
         user = current_user
         user_rewards = UserReward.where(user_id: user.id).includes(:reward)
-        
-        rewards = user_rewards.map(&:reward)
-        
+    
+        rewards = user_rewards.map do |user_reward|
+            {
+                id: user_reward.reward.id,
+                name: user_reward.reward.name,
+                description: user_reward.reward.description,
+                is_active: user_reward.reward.is_active,
+                point_value: user_reward.reward.point_value,
+                partner_id: user_reward.reward.partner_id,
+                code: user_reward.code,
+                is_used: user_reward.is_used
+            }
+        end
+    
         render json: { rewards: rewards }
     end
+    
 
     def reedem_reward
         user = current_user
@@ -274,4 +284,8 @@ class V1::ApplicationController < ApplicationController
         end
         leaderboard
     end
+
+    def generate_county_leaderboard(start_date, end_date)
+    end
+
 end
