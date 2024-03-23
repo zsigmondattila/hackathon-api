@@ -13,7 +13,14 @@ if Doorkeeper::Application.count.zero?
     Doorkeeper::Application.create(name: "client", redirect_uri: "", scopes: "")
 end
 
+app = Doorkeeper::Application.first
+app.uid = "h4ckathon"
+app.secret = "h4ckathon"
+app.save
+
 City.find_or_create_by(name: "Targu Mures", county: "Mures")
+
+User.find_or_create_by(email: "attila.zsigmond2002@gmail.com", encrypted_password: "aaaaaa", firstname: "Attila", lastname: "Zsigmond", phone_number: "0740123456", city_id: City.first.id, balance: 0, leaderboard_position: 0)
 
 Partner.find_or_create_by(name: "Lidl Romania", contact_name: "Elekes István", contact_phone: "0740123456", contact_email: "elekes.istvan@gmail.com")
 Partner.find_or_create_by(name: "Kaufland Romania", contact_name: "Kovács Lehel", contact_phone: "0746183116", contact_email: "kovacs.lehel@gmail.com")
