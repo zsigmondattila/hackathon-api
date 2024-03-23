@@ -19,8 +19,8 @@ class DeviseCreateUsers < ActiveRecord::Migration[7.1]
       t.references :city, null: false, foreign_key: true
       t.string :provider
       t.string :phone_number
-      t.decimal :balance
-      t.integer :leaderboard_position
+      t.decimal :balance, default: 0
+      t.integer :leaderboard_position, default: 0
 
       ## Trackable
       # t.integer  :sign_in_count, default: 0, null: false

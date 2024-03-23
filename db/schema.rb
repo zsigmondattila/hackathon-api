@@ -146,8 +146,8 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_22_211216) do
     t.bigint "city_id", null: false
     t.string "provider"
     t.string "phone_number"
-    t.decimal "balance"
-    t.integer "leaderboard_position"
+    t.decimal "balance", default: "0.0"
+    t.integer "leaderboard_position", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["city_id"], name: "index_users_on_city_id"

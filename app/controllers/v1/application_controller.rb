@@ -7,12 +7,12 @@ class V1::ApplicationController < ApplicationController
 
     def get_counties
         counties = City.pluck(:county).uniq
-        render json: {Counties: counties}
+        render json: {counties: counties}
     end
 
     def get_cities_in_county
         cities = City.find_by(county: params[:county])
-        render json: {Cities: cities}
+        render json: {cities: cities}
     end
 
     def get_collect_points
@@ -29,30 +29,52 @@ class V1::ApplicationController < ApplicationController
                       contact_phone: cp.contact_phone,
                     }
         end
-        render json: {Collect_Points: new_data}
+        render json: {collect_coints: new_data}
+    end
+
+    def get_vouchers_for_user
+        user = current_user
+        vouchers = Voucher.where(user_id: user.id)
+        render json: { vouchers: vouchers }
     end
 
     def scan_voucher
         user = current_user
-        user.vouchers.create(value: params[:value], valability: Time.now + 1.month, barcode: params[:barcode], is_valid: true, partner_id: params[:partner_id])
-        user.balance += params[:value].to_i
-        render json: { message: 'Voucher scanned' }
+        v = Voucher.create(user_id: user.id, value: params[:value], valability: Time.now + 1.month, barcode: params[:barcode], is_valid: true, partner_id: params[:partner_id])
+        user.balance += params[:value].to_d
+        if v.save && user.save
+            render json: { message: 'Voucher scanned', new_balance: user.balance}
+        else
+            render json: { error: user.errors.full_messages, voucher_error: v.errors.full_messages}
+        end
     end
 
     def use_voucher
         user = current_user
-        voucher = user.vouchers.find_by(barcode: params[:barcode])
-        if voucher.is_valid
-            voucher.is_valid = false
-            user.balance -= voucher.value
-            render json: { message: 'Voucher used' }
+        voucher = Voucher.find_by(user_id: user.id, barcode: params[:barcode])
+      
+        if voucher && voucher.is_valid
+          if user.balance >= voucher.value
+              voucher.is_valid = false
+              voucher.save!
+      
+              user.balance -= voucher.value
+              user.save!
+      
+              render json: { message: 'Voucher used' }, status: :accepted
+          else
+            render json: { message: 'Insufficient balance' }, status: :forbidden
+          end
         else
-            render json: { message: 'Voucher already used' }
+          render json: { message: 'Voucher not found or already used' }, status: :not_found
         end
-    end
+      end
 
     def create_achievement
         user = current_user
+        achievement = Achievement.find(params[:achievement_id])
+        s = Scoreboard.create(user_id: user.id, points: achievement.point_value, points_date: Time.now)
+        s.save
         EarnedAchievement.create(user_id: user.id, achievement_id: params[:achievement_id])
         
         render json: { message: "Achievements earned successfully" }, status: :ok
@@ -65,45 +87,60 @@ class V1::ApplicationController < ApplicationController
         if earned
           achievements = user.earned_achievements.map do |ea|
             achievement = Achievement.find(ea.achievement_id)
-            { id: achievement.id,
+            { 
+              id: achievement.id,
               name: achievement.name,
               description: achievement.description,
-              points: achievement.points
+              points: achievement.point_value 
             }
           end
-          render json: { Earned_Achievements: achievements }
+          render json: { earned_achievements: achievements }
         else
-          unearned_achievements = Achievement.where.not(id: user.earned_achievements.pluck(:achievement_id))
+          unearned_achievement_ids = Achievement.pluck(:id) - user.earned_achievements.pluck(:achievement_id)
+          unearned_achievements = Achievement.where(id: unearned_achievement_ids)
           achievements = unearned_achievements.map do |achievement|
-            { id: achievement.id,
+            { 
+              id: achievement.id,
               name: achievement.name,
               description: achievement.description,
-              points: achievement.points
+              points: achievement.point_value
             }
           end
-          render json: { Unearned_Achievements: achievements }
+          render json: { unearned_achievements: achievements } 
         end
-    end
+    end      
 
     def add_points_to_user
         user = current_user
-      
-        user.scoreboard.create(points: params[:points], date: Time.now)
-      end
+        user.scoreboard.create(points: params[:points], points_date: Time.now)
+
+        render json: { message: 'Points added' , current_points: user.scoreboard.sum(:points)}
+    end
       
     def get_user_points
         user = current_user
-        weekly_points = user.scoreboard.where("date >= ?", 1.week.ago).sum(:points)
-        monthly_points = user.scoreboard.where("date >= ?", 1.month.ago).sum(:points)
+        weekly_points = user.scoreboard.where("points_date >= ?", 1.week.ago).sum(:points)
+        monthly_points = user.scoreboard.where("points_date >= ?", 1.month.ago).sum(:points)
         total_points = user.scoreboard.sum(:points)
         
-        render json: { Weekly_Points: weekly_points, Monthly_Points: monthly_points, Total_Points: total_points }
+        render json: { user_id: user.id, Weekly_Points: weekly_points, Monthly_Points: monthly_points, Total_Points: total_points }
     end
 
     def generate_coupon
         user = current_user
-        user.coupons.create(value: params[:value], valid_until: Time.now + 1.month, partner_id: params[:partner_id])
-        render json: { message: 'Coupon generated' }
+        code = SecureRandom.alphanumeric(8).upcase
+        if user.balance < params[:value].to_d
+            render json: { message: 'Insufficient balance' }
+        else
+            user.balance -= params[:value].to_d
+            user.save
+            c = Coupon.create(user_id: user.id, code: code, value: params[:value], valid_until: Time.now + 1.month, partner_id: params[:partner_id])
+            if c.save
+                render json: { message: 'Coupon generated' }
+            else
+                render json: { error: c.errors.full_messages }
+            end
+        end
     end
 
     private

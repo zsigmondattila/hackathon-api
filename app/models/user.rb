@@ -1,6 +1,11 @@
 class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
+  has_many :earned_achievements, class_name: 'EarnedAchievement'
+  has_many :scoreboard, class_name: 'Scoreboard'
+  has_many :vouchers, class_name: 'Voucher'
+  has_many :coupons, class_name: 'Coupon'
+
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
 
