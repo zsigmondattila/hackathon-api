@@ -163,6 +163,7 @@ class V1::ApplicationController < ApplicationController
     def add_points_to_user
         user = current_user
         user.scoreboard.create(points: params[:points], points_date: Time.now)
+        user.scoreboard.create(available_points: params[:points], points_date: Time.now)
 
         render json: { message: 'Points added' , current_points: user.scoreboard.sum(:points)}
     end
@@ -213,6 +214,40 @@ class V1::ApplicationController < ApplicationController
     def get_rewards
         rewards = Reward.all
         render json: { rewards: rewards }
+    end
+
+    def get_user_rewards
+        user = current_user
+        user_rewards = UserReward.where(user_id: user.id).includes(:reward)
+        
+        rewards = user_rewards.map(&:reward)
+        
+        render json: { rewards: rewards }
+    end
+
+    def reedem_reward
+        user = current_user
+        reward = Reward.find(params[:reward_id])
+
+        total_available_points = user.scoreboard.sum(:available_points)
+        puts "Total available points: #{total_available_points} Reward points: #{reward.point_value}"
+
+        if total_available_points < reward.point_value
+            render json: { message: 'Insufficient points' }
+        else
+            user.scoreboard.create(available_points: -reward.point_value, points_date: Time.now)
+
+            code = SecureRandom.alphanumeric(6).upcase
+            user_reward = UserReward.create(user_id: user.id, reward_id: reward.id, is_used: false, code: code)
+            render json: { message: 'Reward redeemed' , user_reward: user_reward}
+        end
+    end
+      
+    def set_user_reward_as_used
+        user_reward = UserReward.find(params[:user_reward_id])
+        user_reward.is_used = true
+        user_reward.save
+        render json: { message: 'Reward marked as used' }
     end
 
     private

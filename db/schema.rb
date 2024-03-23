@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_03_23_123522) do
+ActiveRecord::Schema[7.1].define(version: 2024_03_23_133335) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -135,6 +135,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_23_123522) do
     t.date "points_date"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "available_points"
     t.index ["user_id"], name: "index_scoreboards_on_user_id"
   end
 
@@ -149,6 +150,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_23_123522) do
 
   create_table "user_rewards", force: :cascade do |t|
     t.boolean "is_used"
+    t.string "code"
     t.bigint "user_id", null: false
     t.bigint "reward_id", null: false
     t.datetime "created_at", null: false
@@ -181,6 +183,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_03_23_123522) do
     t.integer "leaderboard_position", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "available_score"
     t.index ["city_id"], name: "index_users_on_city_id"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true

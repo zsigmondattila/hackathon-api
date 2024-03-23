@@ -3,6 +3,7 @@ class CreateScoreboards < ActiveRecord::Migration[7.1]
     create_table :scoreboards do |t|
       t.references :user, null: false, foreign_key: true
       t.integer :points
+      t.integer :available_points
       t.date :points_date
 
       t.timestamps
