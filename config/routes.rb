@@ -12,6 +12,8 @@ Rails.application.routes.draw do
   namespace :v1 do
     post '/registration', to: 'users#create'
     get '/user_data', to: 'users#show'
+    get '/auth/:provider/callback', to: 'v1/users#google_auth'
+
 
     get '/test', to: 'application#test'
     get '/get_counties', to: 'application#get_counties'

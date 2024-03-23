@@ -15,6 +15,7 @@ gem "doorkeeper"
 gem "doorkeeper-jwt"
 gem "devise"
 gem "rack-cors"
+gem "omniauth-google-oauth2"
 
 # Build JSON APIs with ease [https://github.com/rails/jbuilder]
 # gem "jbuilder"
