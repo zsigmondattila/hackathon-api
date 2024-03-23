@@ -143,10 +143,38 @@ class V1::ApplicationController < ApplicationController
         end
     end
 
+    def leaderboard
+        weekly_leaderboard = generate_leaderboard(7.days.ago, Time.now)
+      
+        monthly_leaderboard = generate_leaderboard(1.month.ago, Time.now)
+      
+        total_leaderboard = generate_leaderboard(nil, nil)
+      
+        render json: {
+          weekly_leaderboard: weekly_leaderboard,
+          monthly_leaderboard: monthly_leaderboard,
+          total_leaderboard: total_leaderboard
+        }
+      end
+
     private
 
     # helper method to access the current user from the token
     def current_user
       @current_user ||= User.find_by(id: doorkeeper_token[:resource_owner_id])
+    end
+
+    def generate_leaderboard(start_date, end_date)
+        scoreboard_data = Scoreboard.where(points_date: start_date..end_date)
+                                    .group(:user_id)
+                                    .sum(:points)
+                                    .sort_by { |_user_id, points| -points }
+        
+        leaderboard = []
+        scoreboard_data.each_with_index do |(user_id, points), index|
+          user = User.find(user_id)
+          leaderboard << { rank: index + 1, user_id: user_id, firstname: user.firstname, lastname: user.lastname, points: points }
+        end
+        leaderboard
     end
 end
