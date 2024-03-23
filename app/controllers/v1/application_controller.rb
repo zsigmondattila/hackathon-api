@@ -79,8 +79,8 @@ class V1::ApplicationController < ApplicationController
             puts "coupons_earned #{coupons_earned}"
 
             score = voucher.value * 10
-            scoreboard = Scoreboard.create(user_id: user.id, points: score)
-            scoreboard = Scoreboard.create(user_id: user.id, available_points: score)
+            scoreboard = Scoreboard.create(user_id: user.id, points: score, points_date: Time.now)
+            scoreboard = Scoreboard.create(user_id: user.id, available_points: score, points_date: Time.now)
             if user.save && scoreboard.persisted?
               available_points = Scoreboard.where(user_id: user.id).sum(:available_points)
               render json: { message: 'Voucher scanned', new_balance: user.balance,  available_points: available_points, new_achievements: new_achievements}
@@ -139,6 +139,7 @@ class V1::ApplicationController < ApplicationController
         user = current_user
         achievement = Achievement.find(params[:achievement_id])
         s = Scoreboard.create(user_id: user.id, points: achievement.point_value, points_date: Time.now)
+        s = Scoreboard.create(user_id: user.id, available_points: achievement.point_value, points_date: Time.now)
         s.save
         EarnedAchievement.create(user_id: user.id, achievement_id: params[:achievement_id])
         
