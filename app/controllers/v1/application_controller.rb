@@ -29,7 +29,7 @@ class V1::ApplicationController < ApplicationController
                       contact_phone: cp.contact_phone,
                     }
         end
-        render json: {collect_coints: new_data}
+        render json: {collect_points: new_data}
     end
 
     def get_vouchers_for_user
