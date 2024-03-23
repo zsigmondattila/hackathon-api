@@ -51,6 +51,7 @@ class V1::UsersController < V1::ApplicationController
                 balance: user.balance,
                 total_points: user.scoreboard.sum(:points),
                 available_points: user.scoreboard.sum(:available_points),
+                recycle_count: UserVoucher.where(user_id: user.id).count,
                 leaderboard_position: user.leaderboard_position,
                 city: City.find_by(id: user.city_id)
               }
