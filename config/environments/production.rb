@@ -82,6 +82,7 @@ Rails.application.configure do
 
   config.hosts << "h4ckathon.go.ro:3000"
   config.hosts << "bus4u.fast-table.com"
+  config.hosts << "ecochamp.szaboakos.ro"
 
   # Enable DNS rebinding protection and other `Host` header attacks.
   # config.hosts = [
